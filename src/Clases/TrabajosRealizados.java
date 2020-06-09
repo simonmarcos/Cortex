@@ -8,14 +8,16 @@ public class TrabajosRealizados {
     private java.sql.Date fecha;
     private int horas;
     private int codMarca;
-    private int DNI;
+    private int codPromotor;
+    private String descripcion;
 
-    public TrabajosRealizados(int codTrabajo, Date fecha, int horas, int codMarca, int DNI) {
+    public TrabajosRealizados(int codTrabajo, Date fecha, int horas, int codMarca, int codPromotor, String descripcion) {
         this.codTrabajo = codTrabajo;
         this.fecha = fecha;
         this.horas = horas;
         this.codMarca = codMarca;
-        this.DNI = DNI;
+        this.codPromotor = codPromotor;
+        this.descripcion = descripcion;
     }
 
     public TrabajosRealizados() {
@@ -53,12 +55,20 @@ public class TrabajosRealizados {
         this.codMarca = codMarca;
     }
 
-    public int getDNI() {
-        return DNI;
+    public int getCodPromotor() {
+        return codPromotor;
     }
 
-    public void setDNI(int DNI) {
-        this.DNI = DNI;
+    public void setCodPromotor(int codPromotor) {
+        this.codPromotor = codPromotor;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     @Override

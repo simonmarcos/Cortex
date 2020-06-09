@@ -14,7 +14,7 @@ public class RenderTablaConsultaPromotoras extends DefaultTableCellRenderer {
 
         Color colorFondo = null;
         Color colorFondoPorDefecto = new Color(192, 1, 192);
-        Color colorFondoSeleccion = new Color(17, 99, 0);
+        Color colorFondoSeleccion = new Color(116, 117, 115);
 
         if (isSelected) {
             this.setBackground(colorFondoSeleccion);

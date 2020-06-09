@@ -9,6 +9,7 @@ import DAO.DAO;
 import DAO.MarcaDAO;
 import DAO.OrientacionDAO;
 import DAO.PromotoraDAO;
+import Estilos.HeaderManagement;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -32,6 +33,7 @@ import java.util.regex.Pattern;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.KeyStroke;
+import javax.swing.table.JTableHeader;
 
 public class MenuPromotora extends javax.swing.JDialog {
 
@@ -55,7 +57,7 @@ public class MenuPromotora extends javax.swing.JDialog {
         pestañas.setFocusable(true);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setTitle("Menú Promotoras");
+        this.setTitle("Menú Promotores");
         setearFechaNacimiento();
         eventoFechaNacimiento();
         eventoFechaNacimientoModif();
@@ -331,6 +333,46 @@ public class MenuPromotora extends javax.swing.JDialog {
         }
     }
 
+    private void antecedentesRapido(String nombreTabla) {
+
+        if (nombreTabla.equals(("Personales"))) {
+            try {
+                MenuAntecedentes gf = new MenuAntecedentes(null, true);
+
+                int fila = tablaConsultaDatos.getSelectedRow();
+                String elemento = "";
+                elemento = (String) tablaConsultaDatos.getValueAt(fila, 2);
+
+                String nombres = (String) tablaConsultaDatos.getValueAt(fila, 0) + " " + (String) tablaConsultaDatos.getValueAt(fila, 1);
+
+                gf.set_NombrePromotor(nombres);
+                gf.set_CodPromotor(elemento);
+                gf.setVisible(true);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            return;
+        }
+
+        if (nombreTabla.equals(("Apariencia"))) {
+            try {
+                MenuAntecedentes gf = new MenuAntecedentes(null, true);
+
+                int fila = tablaConsultaApariencia.getSelectedRow();
+                String elemento = "";
+                elemento = (String) tablaConsultaApariencia.getValueAt(fila, 2);
+
+                String nombres = (String) tablaConsultaApariencia.getValueAt(fila, 0) + " " + (String) tablaConsultaApariencia.getValueAt(fila, 1);
+
+                gf.set_NombrePromotor(nombres);
+                gf.set_CodPromotor(elemento);
+                gf.setVisible(true);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
     //-----------------------------------------------------------------------------------------------------
     //--------------------------------------- LISTAR ORIENTACION ---------------------------------------
     private void getListaOrientacion() {
@@ -596,6 +638,7 @@ public class MenuPromotora extends javax.swing.JDialog {
         String[] columnas = {"DNI", "Apellido", "Nombre", "Edad", "Instagram", "Facebook", "Cabello", "Ojos", "Altura", "Medidas"};
         dftApariencia.setColumnIdentifiers(columnas);
         tablaConsultaApariencia.setModel(dftApariencia);
+
     }
 
     private void llenarTablaDatos() {
@@ -740,12 +783,57 @@ public class MenuPromotora extends javax.swing.JDialog {
         RenderTablaConsultaPromotoras rt = new RenderTablaConsultaPromotoras();
         DefaultTableModel dt;
         tablaConsultaDatos.setDefaultRenderer(Object.class, rt);
+
+        //Codigo para aplicarle el formato personalizado al encabezado
+        JTableHeader jth = tablaConsultaDatos.getTableHeader();
+        jth.setDefaultRenderer(new HeaderManagement());
+        tablaConsultaDatos.setTableHeader(jth);
+
+        //Codigo para aplicarme los formatos personalizados
+        tablaConsultaDatos.getColumnModel().getColumn(0).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaDatos.getColumnModel().getColumn(1).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaDatos.getColumnModel().getColumn(2).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaDatos.getColumnModel().getColumn(3).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaDatos.getColumnModel().getColumn(4).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaDatos.getColumnModel().getColumn(5).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaDatos.getColumnModel().getColumn(6).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaDatos.getColumnModel().getColumn(7).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaDatos.getColumnModel().getColumn(8).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaDatos.getColumnModel().getColumn(9).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaDatos.getColumnModel().getColumn(10).setCellRenderer(new RenderTablaConsultaPromotoras());
+
+        //Codigo para especificar el tamaño de las celdas
+        tablaConsultaDatos.setRowHeight(20);
+        //Codigo para no poder escribir las celdas
+        //tablaConsultaDatos.setDefaultEditor(Object.class, null);
     }
 
     private void setearEstiloTablaApariencia() {
         RenderTablaConsultaPromotoras rt = new RenderTablaConsultaPromotoras();
         DefaultTableModel dt;
         tablaConsultaApariencia.setDefaultRenderer(Object.class, rt);
+
+        //Codigo para aplicarle el formato personalizado al encabezado
+        JTableHeader jth = tablaConsultaApariencia.getTableHeader();
+        jth.setDefaultRenderer(new HeaderManagement());
+        tablaConsultaApariencia.setTableHeader(jth);
+
+        //Codigo para aplicarme los formatos personalizados
+        tablaConsultaApariencia.getColumnModel().getColumn(0).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaApariencia.getColumnModel().getColumn(1).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaApariencia.getColumnModel().getColumn(2).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaApariencia.getColumnModel().getColumn(3).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaApariencia.getColumnModel().getColumn(4).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaApariencia.getColumnModel().getColumn(5).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaApariencia.getColumnModel().getColumn(6).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaApariencia.getColumnModel().getColumn(7).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaApariencia.getColumnModel().getColumn(8).setCellRenderer(new RenderTablaConsultaPromotoras());
+        tablaConsultaApariencia.getColumnModel().getColumn(9).setCellRenderer(new RenderTablaConsultaPromotoras());
+
+        //Codigo para especificar el tamaño de las celdas
+        tablaConsultaApariencia.setRowHeight(20);
+        //Codigo para no poder escribir las celdas
+        //tablaConsultaApariencia.setDefaultEditor(Object.class, null);
     }
 
     private void limpiarTablaDatos() {
@@ -1598,7 +1686,7 @@ public class MenuPromotora extends javax.swing.JDialog {
 
         jLabel58.setFont(new java.awt.Font("Arial", 2, 12)); // NOI18N
         jLabel58.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel58.setText("Acontecimientos: Ctrl + A");
+        jLabel58.setText("Acontecimientos: Tab");
         jLabel58.setEnabled(false);
         jLabel58.setOpaque(true);
 
@@ -1724,7 +1812,7 @@ public class MenuPromotora extends javax.swing.JDialog {
         jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         listaConsultaOjos.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaConsultaOjos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- - -", "Azules", "Celestes", "Negros", "Marrones" }));
+        listaConsultaOjos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- - -", "Azules", "Celestes", "Negros", "Marrones", "Verdes" }));
         listaConsultaOjos.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 listaConsultaOjosItemStateChanged(evt);
@@ -1738,7 +1826,7 @@ public class MenuPromotora extends javax.swing.JDialog {
         jLabel34.setText("Ojos:");
 
         listaConsultaCabello.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaConsultaCabello.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- - -", "Negro", "Rubia", "Morocha", "Colorada", "Castaña" }));
+        listaConsultaCabello.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- - -", "Castaño", "Colorado", "Morocho", "Negro", "Rubio" }));
         listaConsultaCabello.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 listaConsultaCabelloItemStateChanged(evt);
@@ -2254,10 +2342,10 @@ public class MenuPromotora extends javax.swing.JDialog {
         jLabel14.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         listaCabello.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaCabello.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Negro", "Rubio", "Morocho", "Colorado", "Castaño" }));
+        listaCabello.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Castaño", "Colorado", "Morocho", "Negro", "Rubio" }));
 
         listaOjos.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaOjos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Azules", "Celestes", "Negros", "Marrones" }));
+        listaOjos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Azules", "Celestes", "Negros", "Marrones", "Verdes" }));
 
         jLabel45.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel45.setText("Altura (cm):");
@@ -2778,10 +2866,10 @@ public class MenuPromotora extends javax.swing.JDialog {
         jLabel31.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         listaCabelloModif.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaCabelloModif.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Negro", "Rubia", "Morocha", "Colorada", "Castaña" }));
+        listaCabelloModif.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Castaño", "Colorado", "Morocho", "Negro", "Rubio" }));
 
         listaOjosModif.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaOjosModif.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Azules", "Celestes", "Negros", "Marrones" }));
+        listaOjosModif.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Azules", "Celestes", "Negros", "Marrones", "Verdes" }));
 
         jLabel50.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel50.setText("Medida Bustos:");
@@ -3071,6 +3159,8 @@ public class MenuPromotora extends javax.swing.JDialog {
             bookFotoRapido("Personales");
         } else if (evt.getKeyCode() == KeyEvent.VK_ALT) {
             detallePrestacionRapido("Personales");
+        } else if (evt.getKeyCode() == KeyEvent.VK_TAB) {
+            antecedentesRapido("Personales");
         }
     }//GEN-LAST:event_tablaConsultaDatosKeyPressed
 
@@ -3145,6 +3235,8 @@ public class MenuPromotora extends javax.swing.JDialog {
             eliminarRapido("Apariencia");
         } else if (evt.getKeyCode() == 32) {
             bookFotoRapido("Apariencia");
+        } else if (evt.getKeyCode() == KeyEvent.VK_TAB) {
+            antecedentesRapido("Apariencia");
         }
     }//GEN-LAST:event_tablaConsultaAparienciaKeyPressed
 

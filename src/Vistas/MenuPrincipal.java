@@ -212,7 +212,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         btnPromotora.setBackground(new java.awt.Color(0, 102, 51));
         btnPromotora.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
         btnPromotora.setForeground(new java.awt.Color(255, 255, 255));
-        btnPromotora.setText("PROMOTORAS");
+        btnPromotora.setText("PROMOTORES");
         btnPromotora.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnPromotora.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -405,7 +405,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGaleriaActionPerformed
 
     private void btnAntecedentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAntecedentesActionPerformed
-
+        MenuAntecedentes ma = new MenuAntecedentes(null, true);
+        ma.setVisible(true);
+        //JOptionPane.showMessageDialog(this, "Este menú solamente puede abrirse desde el menu de promotores.");
     }//GEN-LAST:event_btnAntecedentesActionPerformed
 
     private void btnBeneficioMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBeneficioMarcaActionPerformed
