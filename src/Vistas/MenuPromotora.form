@@ -411,7 +411,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="66" red="66" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Acontecimientos: Tab"/>
+                        <Property name="text" type="java.lang.String" value="Antecedente: Tab"/>
                         <Property name="enabled" type="boolean" value="false"/>
                         <Property name="opaque" type="boolean" value="true"/>
                       </Properties>
@@ -632,13 +632,12 @@
                               <Font name="Arial" size="12" style="1"/>
                             </Property>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="6">
+                              <StringArray count="5">
                                 <StringItem index="0" value="- - -"/>
-                                <StringItem index="1" value="Azules"/>
-                                <StringItem index="2" value="Celestes"/>
-                                <StringItem index="3" value="Negros"/>
-                                <StringItem index="4" value="Marrones"/>
-                                <StringItem index="5" value="Verdes"/>
+                                <StringItem index="1" value="Azul"/>
+                                <StringItem index="2" value="Gris"/>
+                                <StringItem index="3" value="Marron"/>
+                                <StringItem index="4" value="Verde"/>
                               </StringArray>
                             </Property>
                           </Properties>
@@ -671,13 +670,12 @@
                               <Font name="Arial" size="12" style="1"/>
                             </Property>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="6">
+                              <StringArray count="5">
                                 <StringItem index="0" value="- - -"/>
                                 <StringItem index="1" value="Casta&#xf1;o"/>
                                 <StringItem index="2" value="Colorado"/>
                                 <StringItem index="3" value="Morocho"/>
-                                <StringItem index="4" value="Negro"/>
-                                <StringItem index="5" value="Rubio"/>
+                                <StringItem index="4" value="Rubio"/>
                               </StringArray>
                             </Property>
                           </Properties>
@@ -1754,12 +1752,11 @@
                       <Font name="Arial" size="12" style="1"/>
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="5">
+                      <StringArray count="4">
                         <StringItem index="0" value="Casta&#xf1;o"/>
                         <StringItem index="1" value="Colorado"/>
                         <StringItem index="2" value="Morocho"/>
-                        <StringItem index="3" value="Negro"/>
-                        <StringItem index="4" value="Rubio"/>
+                        <StringItem index="3" value="Rubio"/>
                       </StringArray>
                     </Property>
                   </Properties>
@@ -1773,12 +1770,11 @@
                       <Font name="Arial" size="12" style="1"/>
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="5">
-                        <StringItem index="0" value="Azules"/>
-                        <StringItem index="1" value="Celestes"/>
-                        <StringItem index="2" value="Negros"/>
-                        <StringItem index="3" value="Marrones"/>
-                        <StringItem index="4" value="Verdes"/>
+                      <StringArray count="4">
+                        <StringItem index="0" value="Azul"/>
+                        <StringItem index="1" value="Gris"/>
+                        <StringItem index="2" value="Marron"/>
+                        <StringItem index="3" value="Verde"/>
                       </StringArray>
                     </Property>
                   </Properties>
@@ -2754,12 +2750,11 @@
                       <Font name="Arial" size="12" style="1"/>
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="5">
+                      <StringArray count="4">
                         <StringItem index="0" value="Casta&#xf1;o"/>
                         <StringItem index="1" value="Colorado"/>
                         <StringItem index="2" value="Morocho"/>
-                        <StringItem index="3" value="Negro"/>
-                        <StringItem index="4" value="Rubio"/>
+                        <StringItem index="3" value="Rubio"/>
                       </StringArray>
                     </Property>
                   </Properties>
@@ -2773,12 +2768,11 @@
                       <Font name="Arial" size="12" style="1"/>
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="5">
-                        <StringItem index="0" value="Azules"/>
-                        <StringItem index="1" value="Celestes"/>
-                        <StringItem index="2" value="Negros"/>
-                        <StringItem index="3" value="Marrones"/>
-                        <StringItem index="4" value="Verdes"/>
+                      <StringArray count="4">
+                        <StringItem index="0" value="Azul"/>
+                        <StringItem index="1" value="Gris"/>
+                        <StringItem index="2" value="Marron"/>
+                        <StringItem index="3" value="Verde"/>
                       </StringArray>
                     </Property>
                   </Properties>

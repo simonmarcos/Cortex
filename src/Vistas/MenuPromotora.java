@@ -57,7 +57,7 @@ public class MenuPromotora extends javax.swing.JDialog {
         pestañas.setFocusable(true);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setTitle("Menú Promotores");
+        this.setTitle("MENU PROMOTORES");
         setearFechaNacimiento();
         eventoFechaNacimiento();
         eventoFechaNacimientoModif();
@@ -907,6 +907,13 @@ public class MenuPromotora extends javax.swing.JDialog {
 
         if (!nombre.equals("") && !apellido.equals("") && !DNI.equals("") && !edad.equals("")) {
 
+            if (!facebook.equals("") || !instagram.equals("")) {
+                if (facebook.length() >= 200 || instagram.length() >= 200) {
+                    JOptionPane.showMessageDialog(this, "Los campos de Instagram y Facebook no puede exceder los 200 caracteres.");
+                    return;
+                }
+            }
+
             String orientacion = listaOrientacionRegistrar.getSelectedItem().toString();
             String beneficio = listaBeneficiosRegistrar.getSelectedItem().toString();
             String marca = listaMarcaRegistrar.getSelectedItem().toString();
@@ -1124,6 +1131,16 @@ public class MenuPromotora extends javax.swing.JDialog {
         int r = 0;
 
         if (!nombre.equals("") && !apellido.equals("") && !DNI.equals("") && !edad.equals("")) {
+
+            if (!nombre.equals("") && !apellido.equals("") && !DNI.equals("") && !edad.equals("")) {
+
+                if (!facebook.equals("") || !instagram.equals("")) {
+                    if (facebook.length() >= 200 || instagram.length() >= 200) {
+                        JOptionPane.showMessageDialog(this, "Los campos de Instagram y Facebook no puede exceder los 200 caracteres.");
+                        return;
+                    }
+                }
+            }
 
             p = new Promotora();
             p.setNombre(nombre);
@@ -1686,7 +1703,7 @@ public class MenuPromotora extends javax.swing.JDialog {
 
         jLabel58.setFont(new java.awt.Font("Arial", 2, 12)); // NOI18N
         jLabel58.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel58.setText("Acontecimientos: Tab");
+        jLabel58.setText("Antecedente: Tab");
         jLabel58.setEnabled(false);
         jLabel58.setOpaque(true);
 
@@ -1812,7 +1829,7 @@ public class MenuPromotora extends javax.swing.JDialog {
         jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         listaConsultaOjos.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaConsultaOjos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- - -", "Azules", "Celestes", "Negros", "Marrones", "Verdes" }));
+        listaConsultaOjos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- - -", "Azul", "Gris", "Marron", "Verde" }));
         listaConsultaOjos.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 listaConsultaOjosItemStateChanged(evt);
@@ -1826,7 +1843,7 @@ public class MenuPromotora extends javax.swing.JDialog {
         jLabel34.setText("Ojos:");
 
         listaConsultaCabello.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaConsultaCabello.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- - -", "Castaño", "Colorado", "Morocho", "Negro", "Rubio" }));
+        listaConsultaCabello.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- - -", "Castaño", "Colorado", "Morocho", "Rubio" }));
         listaConsultaCabello.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 listaConsultaCabelloItemStateChanged(evt);
@@ -2342,10 +2359,10 @@ public class MenuPromotora extends javax.swing.JDialog {
         jLabel14.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         listaCabello.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaCabello.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Castaño", "Colorado", "Morocho", "Negro", "Rubio" }));
+        listaCabello.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Castaño", "Colorado", "Morocho", "Rubio" }));
 
         listaOjos.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaOjos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Azules", "Celestes", "Negros", "Marrones", "Verdes" }));
+        listaOjos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Azul", "Gris", "Marron", "Verde" }));
 
         jLabel45.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel45.setText("Altura (cm):");
@@ -2866,10 +2883,10 @@ public class MenuPromotora extends javax.swing.JDialog {
         jLabel31.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         listaCabelloModif.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaCabelloModif.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Castaño", "Colorado", "Morocho", "Negro", "Rubio" }));
+        listaCabelloModif.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Castaño", "Colorado", "Morocho", "Rubio" }));
 
         listaOjosModif.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        listaOjosModif.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Azules", "Celestes", "Negros", "Marrones", "Verdes" }));
+        listaOjosModif.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Azul", "Gris", "Marron", "Verde" }));
 
         jLabel50.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel50.setText("Medida Bustos:");

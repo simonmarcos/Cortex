@@ -405,9 +405,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGaleriaActionPerformed
 
     private void btnAntecedentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAntecedentesActionPerformed
-        MenuAntecedentes ma = new MenuAntecedentes(null, true);
-        ma.setVisible(true);
-        //JOptionPane.showMessageDialog(this, "Este menú solamente puede abrirse desde el menu de promotores.");
+        /*MenuAntecedentes ma = new MenuAntecedentes(null, true);
+        ma.setVisible(true);*/
+        JOptionPane.showMessageDialog(this, "Este menú solamente puede abrirse desde el menu de promotores.");
     }//GEN-LAST:event_btnAntecedentesActionPerformed
 
     private void btnBeneficioMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBeneficioMarcaActionPerformed

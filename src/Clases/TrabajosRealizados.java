@@ -2,7 +2,7 @@ package Clases;
 
 import java.sql.Date;
 
-public class TrabajosRealizados {
+public class TrabajosRealizados implements Comparable<TrabajosRealizados> {
 
     private int codTrabajo;
     private java.sql.Date fecha;
@@ -94,6 +94,11 @@ public class TrabajosRealizados {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int compareTo(TrabajosRealizados o) {
+        return o.getFecha().compareTo(this.getFecha());
     }
 
 }

@@ -19,6 +19,8 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -28,7 +30,6 @@ public class MenuAntecedentes extends javax.swing.JDialog {
     private List<Marca> listMarcas = null;
     private List<TrabajosRealizados> listAntecedentes = null;
     private DefaultTableModel dtm = null;
-    private String codAntecedente = "";
     private int codPromotor;
 
     public MenuAntecedentes(java.awt.Frame parent, boolean modal) {
@@ -36,13 +37,13 @@ public class MenuAntecedentes extends javax.swing.JDialog {
         initComponents();
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setTitle("Menú Antecedentes");
+        this.setTitle("MENU ANTECEDENTES");
         addEscapeListener(this);
         setearTablasConsultaDatos();
         setearFechaTrabajada();
         setearEstiloTablaAntecedentes();
         setListMarcas();
-        generarCodAntecedente();
+        eventClickPestaña();
     }
 
     //GETTER AND SETTER
@@ -95,7 +96,19 @@ public class MenuAntecedentes extends javax.swing.JDialog {
         fillTableListAcontecimientos();
     }
 
-    private void generarCodAntecedente() {
+    private void eventClickPestaña() {
+        pestañas.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if (pestañas.getSelectedIndex() == 0) {
+                    limpiarTablaDatos();
+                    fillTableListAcontecimientos();
+                }
+            }
+        });
+    }
+
+    private int generarCodAntecedente() {
 
         String num = "";
         for (int i = 0; i < 5; i++) {
@@ -105,7 +118,7 @@ public class MenuAntecedentes extends javax.swing.JDialog {
             }
             num += nro;
         }
-        codAntecedente = num;
+        return Integer.parseInt(num);
     }
 
     //METODO PARA CERRAR CON ESCAPE EL JDIALOG
@@ -191,19 +204,23 @@ public class MenuAntecedentes extends javax.swing.JDialog {
 
     private void saveNewAntecedente() {
 
-        String codAntecedente = this.codAntecedente;
+        int codAntecedente = generarCodAntecedente();
         String codPromotor = String.valueOf(this.codPromotor);
         Date fecha = new java.sql.Date(fechaTrabajada.getDate().getTime());
-        int horas = Integer.parseInt(txt_HorasTrabajadas.getText());
+        int horas = 0;
+        if (!txt_HorasTrabajadas.getText().equals("")) {
+            horas = Integer.parseInt(txt_HorasTrabajadas.getText());
+        }
+
         int codMarca = Integer.parseInt(list_Marcas.getSelectedItem().toString().replaceAll("[^\\.0123456789]", ""));
         String descripcion = txt_Descripcion.getText();
 
         DAO dao = null;
         TrabajosRealizados tr = null;
 
-        if (!codAntecedente.equals("") && !codPromotor.equals("")) {
+        if (!codPromotor.equals("")) {
             dao = new TrabajosRealizadosDAO();
-            tr = new TrabajosRealizados(Integer.parseInt(codAntecedente), fecha, horas, codMarca, Integer.parseInt(codPromotor), descripcion);
+            tr = new TrabajosRealizados(codAntecedente, fecha, horas, codMarca, Integer.parseInt(codPromotor), descripcion);
 
             int r = dao.insertar(tr);
             if (r == 1) {
@@ -213,11 +230,93 @@ public class MenuAntecedentes extends javax.swing.JDialog {
         }
     }
 
+    private void updateAntecedente() {
+        DAO dao = new TrabajosRealizadosDAO();
+
+        TrabajosRealizados tr = new TrabajosRealizados();
+        tr.setCodTrabajo(Integer.parseInt(text_CodAntecedente_Modif.getText()));
+        tr.setCodPromotor(codPromotor);
+        tr.setFecha(new java.sql.Date(fechaTrabajada_Modif.getDate().getTime()));
+        tr.setHoras(Integer.parseInt(txt_HorasTrabajadas_Modif.getText()));
+        tr.setCodMarca(Integer.parseInt(list_Marcas_Modif.getSelectedItem().toString().replaceAll("[^\\.0123456789]", "")));
+        tr.setDescripcion(txt_Descripcion_Modif.getText());
+
+        int r = dao.modificar(Integer.parseInt(text_CodAntecedente_Modif.getText()), tr);
+        if (r == 1) {
+            JOptionPane.showMessageDialog(this, "El antecedente se actualizó correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo realizar la modificación. Cierre e intente nuevamente.");
+        }
+
+    }
+
     private void limpiarCamposRegistrar() {
         fechaTrabajada.setDateFormatString("");
         txt_HorasTrabajadas.setText("");
         txt_Descripcion.setText("");
         list_Marcas.setSelectedIndex(0);
+    }
+
+    private void modificarRapido() {
+        try {
+
+            pestañas.setSelectedIndex(2);
+
+            int fila = tableAcontecimientos.getSelectedRow();
+            String codAcontecimiento = (String) tableAcontecimientos.getValueAt(fila, 0);
+            String nombreMarca = ((String) tableAcontecimientos.getValueAt(fila, 1)).replace(" ", "");
+            String fecha = (String) tableAcontecimientos.getValueAt(fila, 2);
+            String horas = (String) tableAcontecimientos.getValueAt(fila, 3);
+            String descripcion = (String) tableAcontecimientos.getValueAt(fila, 4);
+
+            text_CodAntecedente_Modif.setText(codAcontecimiento);
+            fechaTrabajada_Modif.setDate(new SimpleDateFormat("dd-MM-yyyy").parse(fecha));
+            txt_HorasTrabajadas_Modif.setText(horas);
+            txt_Descripcion_Modif.setText(descripcion);
+
+            int orientacion = list_Marcas_Modif.getItemCount();
+            for (int i = 0; i < orientacion; i++) {
+                String elemento = list_Marcas_Modif.getItemAt(i).replaceAll("[^a-zA-Z]", "");
+                if (elemento.equalsIgnoreCase(nombreMarca)) {
+                    list_Marcas_Modif.setSelectedIndex(i);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return;
+    }
+
+    private void eliminarRapido() {
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea eliminarlo?", "Eliminar antecedente", JOptionPane.YES_NO_OPTION);
+        if (respuesta == 0) {
+            int fila = tableAcontecimientos.getSelectedRow();
+            String codAntecedente = (String) tableAcontecimientos.getValueAt(fila, 0);
+
+            DAO dao = new TrabajosRealizadosDAO();
+            int r = dao.eliminar(Integer.parseInt(codAntecedente));
+            if (r == 1) {
+                limpiarTablaDatos();
+                // listAntecedentes.removeIf(c -> String.valueOf(c.getCodTrabajo()).trim().equals(String.valueOf(codAntecedente).trim()));
+                fillTableListAcontecimientos();
+                JOptionPane.showMessageDialog(null, "El antecedente fué eliminado correctamente.");
+
+            }
+        }
+        return;
+    }
+
+    private void limpiarTablaDatos() {
+        try {
+            DefaultTableModel modelo = (DefaultTableModel) tableAcontecimientos.getModel();
+            int filas = tableAcontecimientos.getRowCount();
+            for (int i = 0; filas > i; i++) {
+                modelo.removeRow(0);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
+        }
     }
 
     private void validarCamposNumericos(KeyEvent evt) {
@@ -231,7 +330,7 @@ public class MenuAntecedentes extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        pestañas = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableAcontecimientos = new javax.swing.JTable();
@@ -260,15 +359,18 @@ public class MenuAntecedentes extends javax.swing.JDialog {
         jLabel14 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         txt_Descripcion_Modif = new javax.swing.JTextArea();
+        jLabel15 = new javax.swing.JLabel();
+        text_CodAntecedente_Modif = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jTabbedPane1.setForeground(new java.awt.Color(0, 102, 51));
-        jTabbedPane1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        pestañas.setForeground(new java.awt.Color(0, 102, 51));
+        pestañas.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
         jPanel1.setPreferredSize(new java.awt.Dimension(788, 380));
         jPanel1.setVerifyInputWhenFocusTarget(false);
 
+        tableAcontecimientos.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         tableAcontecimientos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
@@ -280,6 +382,11 @@ public class MenuAntecedentes extends javax.swing.JDialog {
 
             }
         ));
+        tableAcontecimientos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tableAcontecimientosKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableAcontecimientos);
 
         lbl_NombrePromotor_Consulta.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
@@ -316,7 +423,7 @@ public class MenuAntecedentes extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Consultar", jPanel1);
+        pestañas.addTab("Consultar", jPanel1);
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel2.setText("Fecha:");
@@ -369,6 +476,7 @@ public class MenuAntecedentes extends javax.swing.JDialog {
         jLabel6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         txt_Descripcion.setColumns(20);
+        txt_Descripcion.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         txt_Descripcion.setRows(5);
         txt_Descripcion.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jScrollPane2.setViewportView(txt_Descripcion);
@@ -419,7 +527,7 @@ public class MenuAntecedentes extends javax.swing.JDialog {
                 .addContainerGap(49, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Registrar", jPanel2);
+        pestañas.addTab("Registrar", jPanel2);
 
         jLabel11.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel11.setText("Fecha:");
@@ -472,9 +580,27 @@ public class MenuAntecedentes extends javax.swing.JDialog {
         jLabel14.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         txt_Descripcion_Modif.setColumns(20);
+        txt_Descripcion_Modif.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         txt_Descripcion_Modif.setRows(5);
         txt_Descripcion_Modif.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jScrollPane4.setViewportView(txt_Descripcion_Modif);
+
+        jLabel15.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel15.setText("Código:");
+        jLabel15.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        text_CodAntecedente_Modif.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        text_CodAntecedente_Modif.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        text_CodAntecedente_Modif.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        text_CodAntecedente_Modif.setEnabled(false);
+        text_CodAntecedente_Modif.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                text_CodAntecedente_ModifKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                text_CodAntecedente_ModifKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -482,25 +608,35 @@ public class MenuAntecedentes extends javax.swing.JDialog {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(list_Marcas_Modif, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fechaTrabajada_Modif, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_HorasTrabajadas_Modif, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(text_CodAntecedente_Modif, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(list_Marcas_Modif, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(fechaTrabajada_Modif, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_HorasTrabajadas_Modif, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(146, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(75, 75, 75)
+                .addGap(31, 31, 31)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(text_CodAntecedente_Modif, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
@@ -519,7 +655,7 @@ public class MenuAntecedentes extends javax.swing.JDialog {
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addContainerGap(119, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -543,17 +679,17 @@ public class MenuAntecedentes extends javax.swing.JDialog {
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
 
-        jTabbedPane1.addTab("Modificar", jPanel4);
+        pestañas.addTab("Modificar", jPanel4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pestañas, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pestañas, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -576,7 +712,7 @@ public class MenuAntecedentes extends javax.swing.JDialog {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+        updateAntecedente();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void txt_HorasTrabajadas_ModifKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_HorasTrabajadas_ModifKeyPressed
@@ -591,6 +727,22 @@ public class MenuAntecedentes extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_fechaTrabajada_ModifKeyPressed
 
+    private void tableAcontecimientosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableAcontecimientosKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            modificarRapido();
+        } else if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            eliminarRapido();
+        }
+    }//GEN-LAST:event_tableAcontecimientosKeyPressed
+
+    private void text_CodAntecedente_ModifKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_text_CodAntecedente_ModifKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_text_CodAntecedente_ModifKeyPressed
+
+    private void text_CodAntecedente_ModifKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_text_CodAntecedente_ModifKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_text_CodAntecedente_ModifKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
@@ -601,6 +753,7 @@ public class MenuAntecedentes extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -613,11 +766,12 @@ public class MenuAntecedentes extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lbl_NombrePromotor_Consulta;
     private javax.swing.JComboBox<String> list_Marcas;
     private javax.swing.JComboBox<String> list_Marcas_Modif;
+    private javax.swing.JTabbedPane pestañas;
     private javax.swing.JTable tableAcontecimientos;
+    private javax.swing.JTextField text_CodAntecedente_Modif;
     private javax.swing.JTextArea txt_Descripcion;
     private javax.swing.JTextArea txt_Descripcion_Modif;
     private javax.swing.JTextField txt_HorasTrabajadas;
