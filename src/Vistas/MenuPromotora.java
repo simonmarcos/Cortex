@@ -1136,7 +1136,7 @@ public class MenuPromotora extends javax.swing.JDialog {
 
                 if (!facebook.equals("") || !instagram.equals("")) {
                     if (facebook.length() >= 200 || instagram.length() >= 200) {
-                        JOptionPane.showMessageDialog(this, "Los campos de Instagram y Facebook no puede exceder los 200 caracteres.");
+                        JOptionPane.showMessageDialog(this, "Los campos de Instagram y Facebook no pueden exceder los 200 caracteres.");
                         return;
                     }
                 }

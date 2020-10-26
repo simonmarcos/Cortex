@@ -104,6 +104,9 @@ public class MenuAntecedentes extends javax.swing.JDialog {
                     limpiarTablaDatos();
                     fillTableListAcontecimientos();
                 }
+                if (pestañas.getSelectedIndex() == 1) {
+                    setearFechaTrabajada();
+                }
             }
         });
     }
